@@ -46,7 +46,7 @@ CLI sample
 ![CLI sample](https://raw.githubusercontent.com/fabiofenoglio/lelo-f1-python-sdk/master/docs/screenshots/cli0.jpg)
 
 GUI sample
-![GUI sample](https://raw.githubusercontent.com/fabiofenoglio/lelo-f1-python-sdk/master/docs/screenshots/cli0.jpg)
+![GUI sample](https://raw.githubusercontent.com/fabiofenoglio/lelo-f1-python-sdk/master/docs/screenshots/gui0.jpg)
 
 
 ### Usage
