@@ -4,14 +4,14 @@ from distutils.core import setup
 setup(
 	name = 'lelof1py',
 	packages = ['lelof1py'],
-	version = '0.5-alpha',
+	version = '0.6-beta',
 	license = 'MIT',
 	description = 'Python client for LELO F1 SDK device',
     long_description = 'See https://github.com/fabiofenoglio/lelo-f1-python-sdk',
 	author = 'Fabio Fenoglio',
 	author_email = 'development@fabiofenoglio.it',
 	url = 'https://github.com/fabiofenoglio/lelo-f1-python-sdk',
-	download_url = 'https://github.com/fabiofenoglio/lelo-f1-python-sdk/archive/v0.5-alpha.tar.gz',
+	download_url = 'https://github.com/fabiofenoglio/lelo-f1-python-sdk/archive/v0.6-beta.tar.gz',
 	keywords = ['LELO', 'BLUETOOTH'],
 	install_requires = [
 		'asyncio',
@@ -20,7 +20,7 @@ setup(
 	],
 	classifiers = [
         # Chose either "3 - Alpha", "4 - Beta" or "5 - Production/Stable" as the current state of your package
-		'Development Status :: 3 - Alpha',
+		'Development Status :: 4 - Beta',
 		'Intended Audience :: Developers',
 		'Topic :: Software Development :: Build Tools',
 		'License :: OSI Approved :: MIT License',
