@@ -1,13 +1,13 @@
 # LELO F1 SDK Python client
 
-Python package to provide a BLE client to LELO's F1 SDK
+Python package to provide a BLE client to LELO's F1 SDK.
 
   - Supports python 3.4+
   - Supports standard python logging library
 
 # Features
 
-  - Supports the features listed on the official [BLE documentation page](https://github.com/LELO-Devs/F1s-SDK/blob/master/BLE-Specs.md) for the device 
+Supports the features listed on the official [BLE documentation page](https://github.com/LELO-Devs/F1s-SDK/blob/master/BLE-Specs.md) for the device.
 
 
 ### Dependencies
@@ -20,12 +20,28 @@ Requires:
 
 ### Installation
 
-This package requires python 3.4+
+This package requires python 3.4.
 
 You can install from pip:
 ```sh
 $ pip install lelof1py
 ```
+
+**Warning**: currently, on python 3.8 there could be some problems with installing the dependency `pythonnet` via `pip`.
+If you have problems running `pip install lelof1py` you can:
+* try using a python version lower than 3.8, ideally 3.6
+* use a virtual environment with a lower python version (ideally 3.6)
+* open an issue
+
+### Demo
+
+Two examples are included in this repository: `sample_cli.py` and `sample_gui.py`.
+In order to run the examples:
+
+* ensure lelof1py is installed by running ```pip install lelof1py```
+* ensure PySimpleGUI is installed by running ```pip install pysimplegui```
+* run either ```python sample_cly.py``` or ```python sample_gui.py```
+
 
 ### Usage
 

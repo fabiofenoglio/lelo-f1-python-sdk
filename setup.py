@@ -3,17 +3,20 @@ from distutils.core import setup
 setup(
 	name = 'lelof1py',
 	packages = ['lelof1py'],
-	version = '0.2-alpha',
+	version = '0.3-alpha',
 	license = 'MIT',
 	description = 'Python client for LELO F1 SDK device',
+    long_description = 'file: README.md',
+    long_description_content_type = 'text/markdown',
 	author = 'Fabio Fenoglio',
 	author_email = 'development@fabiofenoglio.it',
 	url = 'https://github.com/fabiofenoglio/lelo-f1-python-sdk',
-	download_url = 'https://github.com/fabiofenoglio/lelo-f1-python-sdk/archive/v0.2-alpha.tar.gz',
+	download_url = 'https://github.com/fabiofenoglio/lelo-f1-python-sdk/archive/v0.3-alpha.tar.gz',
 	keywords = ['LELO', 'BLUETOOTH'],
 	install_requires = [
 		'asyncio',
 		'bleak',
+        'pysimplegui'
 	],
 	classifiers = [
         # Chose either "3 - Alpha", "4 - Beta" or "5 - Production/Stable" as the current state of your package
