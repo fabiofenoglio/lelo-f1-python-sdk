@@ -40,7 +40,7 @@ In order to run the examples:
 
 * ensure lelof1py is installed by running ```pip install lelof1py```
 * ensure PySimpleGUI is installed by running ```pip install pysimplegui```
-* run either ```python sample_cly.py``` or ```python sample_gui.py```
+* run either ```python sample_cli.py``` or ```python sample_gui.py```
 
 
 ### Usage
