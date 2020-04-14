@@ -8,8 +8,8 @@ setup(
 	description = 'Python client for LELO F1 SDK device',
 	author = 'Fabio Fenoglio',
 	author_email = 'development@fabiofenoglio.it',
-	url = 'https://github.com/user/fabiofenoglio',
-	download_url = 'https://github.com/user/reponame/archive/v_01.tar.gz',
+	url = 'https://github.com/fabiofenoglio/lelo-f1-python-sdk',
+	download_url = 'https://github.com/fabiofenoglio/lelo-f1-python-sdk/archive/v0.1.tar.gz',
 	keywords = ['LELO', 'BLUETOOTH'],
 	install_requires = [
 		'asyncio',
