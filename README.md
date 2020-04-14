@@ -42,6 +42,12 @@ In order to run the examples:
 * ensure PySimpleGUI is installed by running ```pip install pysimplegui```
 * run either ```python sample_cli.py``` or ```python sample_gui.py```
 
+CLI sample
+![CLI sample](https://raw.githubusercontent.com/fabiofenoglio/lelo-f1-python-sdk/master/docs/screenshots/cli0.jpg)
+
+GUI sample
+![GUI sample](https://raw.githubusercontent.com/fabiofenoglio/lelo-f1-python-sdk/master/docs/screenshots/cli0.jpg)
+
 
 ### Usage
 
