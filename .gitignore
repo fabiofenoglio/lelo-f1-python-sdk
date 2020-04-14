@@ -1,0 +1,6 @@
+/py36/
+/.vscode/
+.project
+.pydevproject
+__pycache__
+*.pyc
