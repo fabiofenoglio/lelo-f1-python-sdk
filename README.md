@@ -1,22 +1,10 @@
 # LELO F1 SDK Python client
 
-Python package to provide a BLE client to LELO's F1 SDK.
+Python package to provide a BLE client to [LELO's F1 SDK](https://github.com/LELO-Devs/F1s-SDK).
 
-  - Supports python 3.4+
-  - Supports standard python logging library
+The original and official repository with sample code for Android and iOS as well as BLE specifications can be found at [https://github.com/LELO-Devs/F1s-SDK](https://github.com/LELO-Devs/F1s-SDK).
 
-# Features
-
-Supports the features listed on the official [BLE documentation page](https://github.com/LELO-Devs/F1s-SDK/blob/master/BLE-Specs.md) for the device.
-
-
-### Dependencies
-
-Requires:
-
-* asyncio - async coroutines management
-* bleak - cross-platform BLE client
-
+This is an alternative Python (3.4+) wrapper. It supports all of the features listed in the BLE specifications (see following 'available methods').
 
 ### Installation
 
@@ -26,6 +14,15 @@ You can install from pip:
 ```sh
 $ pip install lelof1py
 ```
+
+### Dependencies
+
+Requires:
+
+* asyncio - async coroutines management
+* bleak - cross-platform BLE client
+
+
 
 **Warning**: currently, on python 3.8 there could be some problems with installing the dependency `pythonnet` via `pip`.
 If you have problems running `pip install lelof1py` you can:

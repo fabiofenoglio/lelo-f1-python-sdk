@@ -5,6 +5,9 @@ lelof1py\__init__.py
 lelof1py\async_client.py
 lelof1py\callback_handler.py
 lelof1py\definitions.py
+lelof1py\fs_utils.py
 lelof1py\helpers.py
 lelof1py\register.py
 lelof1py\registers.py
+lelof1py\socket_client.py
+lelof1py\socket_server.py
