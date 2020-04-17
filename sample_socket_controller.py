@@ -32,6 +32,8 @@ class GUISampleSocketController(GUISample):
 		
 		super(GUISampleSocketController, self).__init__(loop, refresh_interval)
 
+		self.fs_utils = f1client.FsUtils('GUISampleSocketController')
+
 	
 	def get_layout(self):
 		'''
@@ -86,11 +88,16 @@ class GUISampleSocketController(GUISample):
 
 	async def connect_to_remote(self):
 		
+		last_profile = self.fs_utils.load_connection_profile(safe=True)
+		def_name = last_profile.name if last_profile and last_profile.name else DEFAULT_NAME
+		def_addr = last_profile.address.split(':')[0] if last_profile and last_profile.address else REMOTE_ADDR
+		def_port = int(last_profile.address.split(':')[1]) if last_profile and last_profile.address else REMOTE_PORT
+		
 		window = sg.Window('Remote connection', [
 			[sg.Text('Please enter data for remote connection.', pad=(0, 20))],
-			[sg.Text('Your name:', pad=(0, 10)), sg.Input(DEFAULT_NAME, key='FIELD_NAME', size=(15, 1))],
-			[sg.Text('IP address:', pad=(0, 10)), sg.Input(REMOTE_ADDR, key='FIELD_IP', size=(15, 1))],
-			[sg.Text('Port:', pad=(0, 10)), sg.Input(REMOTE_PORT, key='FIELD_PORT', size=(10, 1))],
+			[sg.Text('Your name:', pad=(0, 10)), sg.Input(def_name, key='FIELD_NAME', size=(15, 1))],
+			[sg.Text('IP address:', pad=(0, 10)), sg.Input(def_addr, key='FIELD_IP', size=(15, 1))],
+			[sg.Text('Port:', pad=(0, 10)), sg.Input(def_port, key='FIELD_PORT', size=(10, 1))],
 			[sg.Button('CONNECT', key='connect', size=(10, None), pad=(5, 20)), sg.Button('Cancel', key='cancel', size=(6, None), pad=(5, 20))]
 		])
 		
@@ -135,7 +142,7 @@ class GUISampleSocketController(GUISample):
 		await self.get_client().request_remote_authorization()
 
 		while True:
-			r = await self.get_client().is_connection_authorized()
+			r = await self.get_client().get_remote_authorization()
 			if r == 'BLOCKED':
 				logging.warning('server DID NOT AUTHORIZE this client.')
 				self.loop.create_task(self.close())
@@ -160,6 +167,14 @@ class GUISampleSocketController(GUISample):
 		
 		await self.get_client().stop_motors()
 		self.update_status('connected to device')
+		
+		# Save connection profile to disk
+		profile = f1client.ConnectionProfile()
+		profile.address = self.remote_ip + ':' + str(self.remote_port)
+		profile.uuid = 'not-supported (' + profile.address + ')'
+		profile.name = self.remote_name
+		
+		self.fs_utils.save_connection_profile(profile, safe=True)
 	
 		# Lock device for exclusive access
 		await self.get_client().send_command('lock')

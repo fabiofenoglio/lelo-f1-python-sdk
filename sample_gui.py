@@ -80,9 +80,9 @@ class GUISample:
 		return [
 			[sg.Frame('Status', [
 					[sg.Text('Status:'), sg.Text('initializing ...', size=(50,1), key=self.FIELD_STATUS)],
-					[sg.Text('Device:'), sg.Text('', size=(50,1), key=self.FIELD_DEVICE)],
-					[sg.Text('Key state:'), sg.Text('', size=(30,1), key=self.FIELD_KEY_STATE)],
-					[sg.Text('Use count:'), sg.Text('', size=(44,1), key=self.FIELD_USE_LOG),
+					[sg.Text('Device:'), sg.Text('--', size=(50,1), key=self.FIELD_DEVICE)],
+					[sg.Text('Key state:'), sg.Text('not authorized', size=(30,1), key=self.FIELD_KEY_STATE)],
+					[sg.Text('Use count:'), sg.Text('--', size=(44,1), key=self.FIELD_USE_LOG),
 					 sg.Button('reset', key=self.EVENT_RESET_USE_COUNT)
 					],
 					[sg.Text('', pad=((0, 0), (0, 10)))],
@@ -620,6 +620,8 @@ class GUISample:
 		
 		snapshot = self.snapshot
 		
+		if 'key_state' in snapshot: 
+			self.update(self.FIELD_KEY_STATE, 'authorized' if snapshot['key_state'] else 'not authorized')
 		if 'buttons' in snapshot:
 			if snapshot['buttons'] == f1client.Buttons.PLUS:
 				text = 'PRESSED + BUTTON'

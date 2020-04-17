@@ -136,3 +136,4 @@ class ConnectionProfile:
 	'''
 	address = None
 	uuid = None
+	name = None
