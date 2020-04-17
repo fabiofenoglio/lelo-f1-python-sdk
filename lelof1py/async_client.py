@@ -31,6 +31,8 @@ class AsyncClient(object):
 	user_handlers = dict()
 	bleak_handlers = dict()
 	callback_data_history = dict()
+	
+	key_state_check = True
 
 
 	def __init__(self):
@@ -160,7 +162,8 @@ class AsyncClient(object):
 	async def _disconnect(self):
 		self.logger.info('disconnecting from device')
 
-		await self.bleak_client.disconnect()
+		if self.bleak_client:
+			await self.bleak_client.disconnect()
 
 		self.connected = False
 		self.bleak_client = None
@@ -209,8 +212,25 @@ class AsyncClient(object):
 		'''
 		Shortcut method to raise error if the connection has not been authorized by pressing the central button
 		'''
-		if not await self.is_authorized():
-			raise ValueError('Client is not authorized (KEY_STATE = 0). Press the central button to proceed')
+		if self.key_state_check:
+			if not await self.is_authorized():
+				raise ValueError('Client is not authorized (KEY_STATE = 0). Press the central button to proceed')
+		else:
+			self.logger.debug('skipping key_state check because it is disabled')
+
+
+	def enable_key_state_check(self):
+		'''
+		Enable check of KEY_STATE before attempting commands.
+		'''
+		self.key_state_check = True
+
+
+	def disable_key_state_check(self):
+		'''
+		Disable check of KEY_STATE before attempting commands.
+		'''
+		self.key_state_check = False
 
 
 	async def read(self, register, silent=False):
@@ -219,6 +239,8 @@ class AsyncClient(object):
 		Automatically converts the data from device format to user format using the register configuration.
 		The silent parameters allow to skip logging for recurrent background reads.
 		'''
+		self.assert_connected()
+		
 		if not register:
 			raise ValueError('Register is required')
 
@@ -234,6 +256,8 @@ class AsyncClient(object):
 		Writes to the specified register.
 		Automatically converts the data from user format to device format using the register configuration.
 		'''
+		self.assert_connected()
+		
 		if not register:
 			raise ValueError('Register is required')
 
@@ -249,6 +273,8 @@ class AsyncClient(object):
 		Reads the manufacturer name.
 		Returns an ASCII UTF-8 string
 		'''
+		self.assert_connected()
+		
 		return await self.read(Registers.MANUFACTURER_NAME)
 
 
@@ -257,6 +283,8 @@ class AsyncClient(object):
 		Reads the model number.
 		Returns an ASCII UTF-8 string
 		'''
+		self.assert_connected()
+		
 		return await self.read(Registers.MODEL_NUMBER)
 
 
@@ -265,6 +293,8 @@ class AsyncClient(object):
 		Reads the device hardware revision.
 		Returns an ASCII UTF-8 string
 		'''
+		self.assert_connected()
+		
 		return await self.read(Registers.HARDWARE_REVISION)
 
 
@@ -273,6 +303,8 @@ class AsyncClient(object):
 		Reads the device firmware revision.
 		Returns an ASCII UTF-8 string
 		'''
+		self.assert_connected()
+		
 		return await self.read(Registers.FIRMWARE_REVISION)
 
 
@@ -281,6 +313,8 @@ class AsyncClient(object):
 		Reads the device software revision.
 		Returns an ASCII UTF-8 string
 		'''
+		self.assert_connected()
+		
 		return await self.read(Registers.SOFTWARE_REVISION)
 
 
@@ -289,6 +323,8 @@ class AsyncClient(object):
 		Reads the device mac address.
 		Returns an ASCII UTF-8 string in the format AA:BB:CC:DD:EE:FF
 		'''
+		self.assert_connected()
+		
 		return await self.read(Registers.MAC_ADDRESS)
 
 
@@ -297,6 +333,8 @@ class AsyncClient(object):
 		Reads the device serial number.
 		Returns an ASCII UTF-8 string in the format XX:......:YY
 		'''
+		self.assert_connected()
+		
 		return await self.read(Registers.SERIAL_NUMBER)
 
 
@@ -305,6 +343,8 @@ class AsyncClient(object):
 		Reads the device CHIP ID.
 		Returns an ASCII UTF-8 string in the format XX:......:YY
 		'''
+		self.assert_connected()
+		
 		return await self.read(Registers.CHIP_ID)
 
 
@@ -313,6 +353,8 @@ class AsyncClient(object):
 		Reads the device name.
 		Returns an ASCII UTF-8 string
 		'''
+		self.assert_connected()
+		
 		return await self.read(Registers.GENERIC_ACCESS_DEVICE_NAME)
 
 
@@ -321,6 +363,8 @@ class AsyncClient(object):
 		Reads the system id.
 		Returns an ASCII UTF-8 string in the format XX:......:YY
 		'''
+		self.assert_connected()
+		
 		return await self.read(Registers.DEVICE_INFORMATION_SYSTEM_ID)
 
 
@@ -329,6 +373,8 @@ class AsyncClient(object):
 		Reads the PNP id.
 		Returns an ASCII UTF-8 string in the format XX:......:YY
 		'''
+		self.assert_connected()
+		
 		return await self.read(Registers.DEVICE_INFORMATION_PNP_ID)
 
 
@@ -337,6 +383,8 @@ class AsyncClient(object):
 		Reads the IEEE 11073 20601 regulation mandatory specification.
 		Returns an ASCII UTF-8 string in the format XX:......:YY
 		'''
+		self.assert_connected()
+		
 		return await self.read(Registers.DEVICE_INFORMATION_IEEE11073)
 
 
@@ -345,6 +393,8 @@ class AsyncClient(object):
 		Reads the battery level.
 		Returns an integer from 0 to 100
 		'''
+		self.assert_connected()
+		
 		return await self.read(Registers.BATTERY_LEVEL)
 
 
@@ -689,6 +739,8 @@ class AsyncClient(object):
 		To stop receiving the notifications, call .unregister() on the returned handler.
 		Alternatively you can call .unregister(handler) on this client.
 		'''
+		self.assert_connected()
+		
 		self.logger.debug('registering callback for key state')
 		cb = await self._create_callback_handler(Registers.KEY_STATE, user_callback, distinct_until_changed=distinct_until_changed)
 		return cb
@@ -711,6 +763,8 @@ class AsyncClient(object):
 		To stop receiving the notifications, call .unregister() on the returned handler.
 		Alternatively you can call .unregister(handler) on this client.
 		'''
+		self.assert_connected()
+		
 		self.logger.debug('registering callback for buttons')
 		cb = await self._create_callback_handler(Registers.BUTTON, user_callback, distinct_until_changed=distinct_until_changed)
 		return cb
@@ -728,6 +782,8 @@ class AsyncClient(object):
 		To stop receiving the notifications, call .unregister() on the returned handler.
 		Alternatively you can call .unregister(handler) on this client.
 		'''
+		self.assert_connected()
+		
 		self.logger.debug('registering callback for rotation speed')
 		cb = await self._create_callback_handler(Registers.HALL, user_callback, distinct_until_changed=distinct_until_changed)
 		return cb
@@ -745,6 +801,8 @@ class AsyncClient(object):
 		To stop receiving the notifications, call .unregister() on the returned handler.
 		Alternatively you can call .unregister(handler) on this client.
 		'''
+		self.assert_connected()
+		
 		self.logger.debug('registering callback for depth')
 		cb = await self._create_callback_handler(Registers.LENGTH, user_callback, distinct_until_changed=distinct_until_changed)
 		return cb
@@ -762,6 +820,8 @@ class AsyncClient(object):
 		To stop receiving the notifications, call .unregister() on the returned handler.
 		Alternatively you can call .unregister(handler) on this client.
 		'''
+		self.assert_connected()
+		
 		self.logger.debug('registering callback for accelerometer')
 		cb = await self._create_callback_handler(Registers.ACCELEROMETER, user_callback, distinct_until_changed=distinct_until_changed)
 		return cb
@@ -779,6 +839,8 @@ class AsyncClient(object):
 		To stop receiving the notifications, call .unregister() on the returned handler.
 		Alternatively you can call .unregister(handler) on this client.
 		'''
+		self.assert_connected()
+		
 		self.logger.debug('registering callback for pressure and temperature')
 		cb = await self._create_callback_handler(Registers.PRESSURE_TEMPERATURE, user_callback, distinct_until_changed=distinct_until_changed)
 		return cb
@@ -830,7 +892,7 @@ class AsyncClient(object):
 
 		self.logger_callback.debug('received notification of data change for register %s %s', register.address, register.name)
 		converted = register.from_device(raw_data)
-		self.logger_io.info('NOTIFICATION %s %s >> %s', register.address, register.name, converted)
+		self.logger_io.debug('NOTIFICATION %s %s >> %s', register.address, register.name, converted)
 			
 		if register.address in self.user_handlers and len(self.user_handlers[register.address]) > 0:
 			for user_handler in self.user_handlers[register.address]:

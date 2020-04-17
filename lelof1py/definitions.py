@@ -9,6 +9,8 @@ class Constants:
 	LOGGER_IO_NAME = LOGGER_NAME + '.io'
 	LOGGER_CALLBACK_NAME = LOGGER_NAME + '.notification'
 	LOGGER_SYNC_NAME = LOGGER_NAME + '.sync'
+	LOGGER_SOCKET_SERVER_NAME = LOGGER_NAME + '.socket-server'
+	LOGGER_FS_NAME = LOGGER_NAME + '.fs'
 	ADVERTISING_DEVICE_NAME = 'F1s'
 
 
@@ -126,3 +128,11 @@ class Buttons:
 	CENTRAL = 0x00
 	PLUS = 0x01
 	MINUS = 0x02
+
+
+class ConnectionProfile:
+	'''
+	Holds information on connected device
+	'''
+	address = None
+	uuid = None

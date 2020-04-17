@@ -3,17 +3,6 @@ import logging
 
 import lelof1py as f1client
 
-# Configure logging format
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-
-# Configure logging for the library
-logging.getLogger(f1client.Constants.LOGGER_NAME).setLevel(logging.INFO)
-logging.getLogger(f1client.Constants.LOGGER_CALLBACK_NAME).setLevel(logging.INFO)
-logging.getLogger(f1client.Constants.LOGGER_IO_NAME).setLevel(logging.WARN)
-
-# Configure logging for the backend BLE adapter (bleak)
-logging.getLogger('bleak').setLevel(logging.INFO)
-
 
 async def run():
 	'''
@@ -103,6 +92,18 @@ async def run():
 			await client.disconnect()
 
 
-# Run the routine inside the main event loop
-loop = asyncio.get_event_loop()
-loop.run_until_complete(run())
+if __name__ == '__main__':
+	# Configure logging format
+	logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+	
+	# Configure logging for the library
+	logging.getLogger(f1client.Constants.LOGGER_NAME).setLevel(logging.INFO)
+	logging.getLogger(f1client.Constants.LOGGER_CALLBACK_NAME).setLevel(logging.INFO)
+	logging.getLogger(f1client.Constants.LOGGER_IO_NAME).setLevel(logging.WARN)
+	
+	# Configure logging for the backend BLE adapter (bleak)
+	logging.getLogger('bleak').setLevel(logging.INFO)
+
+	# Run the routine inside the main event loop
+	loop = asyncio.get_event_loop()
+	loop.run_until_complete(run())
