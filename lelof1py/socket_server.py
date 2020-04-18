@@ -252,7 +252,7 @@ class SocketServer():
 
 				self.logger_io.debug('SEND %s', response)
 				
-				await self.loop.sock_sendall(client, response.encode(self.SOCKET_ENCODING))
+				await self.loop.sock_sendall(client, (response + '\n').encode(self.SOCKET_ENCODING))
 				
 				if not client_info.id in self.clients:
 					self.logger.info('command requested disconnection')
@@ -279,7 +279,7 @@ class SocketServer():
 			self.logger.debug('client %s is known already', client_id)
 			return self.clients[client_id]
 		else:
-			self.logger.debug('client %s is a new client, registering')
+			self.logger.debug('client %s is a new client, registering', client_id)
 			client_info = SocketConnection(client_id)
 			self.clients[client_id] = client_info
 			return client_info

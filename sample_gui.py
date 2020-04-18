@@ -55,7 +55,7 @@ class GUISample:
 		self.stopped = False
 		self.loop = loop
 		self.snapshot = dict()
-		self.fs_utils = f1client.FsUtils('GUISample')
+		self.fs_utils = f1client.FsUtils(self.__class__.__name__)
 	
 		# Discovered devices
 		self.devices = []
