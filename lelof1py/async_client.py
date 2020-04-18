@@ -107,7 +107,7 @@ class AsyncClient(object):
 				self.logger.debug("connection attempt #%d failed: %s", attempt_num, e)
 				if time.time() - time_start < timeout:
 					# Sleep 250ms between attempts
-					asyncio.sleep(0.25)
+					await asyncio.sleep(0.25)
 				else:
 					err = e
 					self.logger.warning('connection attempt timed out')
