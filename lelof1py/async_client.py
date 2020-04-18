@@ -121,12 +121,35 @@ class AsyncClient(object):
 		self.bleak_client = client
 		self.connected_address = address
 		
+		# Profiles
+		self.logger.debug('profiling the device')
+		try:
+			await self._profile_device()
+		except Exception as e:
+			self.logger.exception('error profiling device: %s', e)
+		
 		# Pings (reading a DeviceInfo register) to verify communication
 		self.logger.debug('verifying communication layer')
 		await self.ping()
 
 		return self.bleak_client
 	
+	
+	async def _profile_device(self):
+		'''
+		Enumerates characteristics on the device
+		'''
+		profiling = await self.bleak_client.get_services()
+		for k, v in profiling.characteristics.items():
+			self.logger.debug('root characteristic %s -> %s', k, v)
+			
+		for k, v in profiling.services.items():
+			self.logger.debug('service %s -> %s', k, v.description)
+			for v2 in v.characteristics:
+				self.logger.debug('\tcharacteristic %s', v2)
+				for v3 in v2.descriptors:
+					self.logger.debug('\t\tdescriptor %s handle %d', v3, v3.handle)
+
 	
 	@synchronized(SYNC_LOCK)
 	async def disconnect(self):
