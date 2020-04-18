@@ -96,13 +96,13 @@ class GUISample:
 					[sg.Text('Auto vibrator settings:'), sg.Text('', size=(50,1), key=self.FIELD_VIBRATOR_SETTINGS)],
 					[sg.Text('', pad=((0, 0), (0, 10)))],
 					[sg.Text('Main motor:'), sg.ProgressBar(100, orientation='h', size=(25, 20), key=self.FIELD_MAIN_MOTOR, pad=((16, 0), (0, 0))),
-					 sg.Button('off', key=self.EVENT_MAIN_MOTOR_OFF, size=(5, None)), 
-					 sg.Button('-', key=self.EVENT_MAIN_MOTOR_MINUS, size=(5, None)),
-					 sg.Button('+', key=self.EVENT_MAIN_MOTOR_PLUS, size=(5, None))],
+					 sg.Button('off', key=self.EVENT_MAIN_MOTOR_OFF, size=(5, 1)), 
+					 sg.Button('-', key=self.EVENT_MAIN_MOTOR_MINUS, size=(5, 1)),
+					 sg.Button('+', key=self.EVENT_MAIN_MOTOR_PLUS, size=(5, 1))],
 					[sg.Text('Vibrator motor:'), sg.ProgressBar(100, orientation='h', size=(25, 20), key=self.FIELD_VIBRATOR_MOTOR, pad=(1,0)),
-					 sg.Button('off', key=self.EVENT_VIB_MOTOR_OFF, size=(5, None)), 
-					 sg.Button('-', key=self.EVENT_VIB_MOTOR_MINUS, size=(5, None)),
-					 sg.Button('+', key=self.EVENT_VIB_MOTOR_PLUS, size=(5, None))]
+					 sg.Button('off', key=self.EVENT_VIB_MOTOR_OFF, size=(5, 1)), 
+					 sg.Button('-', key=self.EVENT_VIB_MOTOR_MINUS, size=(5, 1)),
+					 sg.Button('+', key=self.EVENT_VIB_MOTOR_PLUS, size=(5, 1))]
 				], pad=(5,10))
 			],
 			[sg.Multiline('initializing', size=(68,13), disabled=True, key=self.FIELD_LOG, pad=(5,5)),
