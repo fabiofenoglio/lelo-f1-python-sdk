@@ -48,9 +48,6 @@ class GUISampleWithSocket(GUISample):
 
 		logging.info('running GUISampleWithSocket in event loop %s', loop)
 		
-		# t = threading.Thread(target=self.server_runner)
-		# t.start()
-		# self.server_thread = t
 		self.server_thread = None
 		
 		self.tasks.append(loop.create_task(self.server_runner()))
@@ -76,14 +73,8 @@ class GUISampleWithSocket(GUISample):
 			logging.info('starting server in current loop')
 			self.server_loop = l
 			
-			# self.tasks.append(task)
-			# logging.debug('waiting for server_runner loop to run_forever')
-			# l.run_until_complete(self.server.run_server(l))
 			await self.server.run_server(l)
 			
-			# logging.debug('closing server_runner loop')
-			# l.close()
-			# logging.debug('done closing server_runner loop')
 	
 		except Exception as e:
 			if self.server and self.server.stopped:
