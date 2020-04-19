@@ -1,3 +1,6 @@
+![Upload Python Package](https://github.com/fabiofenoglio/lelo-f1-python-sdk/workflows/Upload%20Python%20Package/badge.svg)
+
+
 # LELO F1 SDK Python client
 
 Python package to provide a BLE client to [LELO's F1 SDK](https://github.com/LELO-Devs/F1s-SDK).

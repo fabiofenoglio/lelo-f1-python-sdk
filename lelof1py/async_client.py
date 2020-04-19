@@ -141,16 +141,36 @@ class AsyncClient(object):
 		'''
 		profiling = await self.bleak_client.get_services()
 		for k, v in profiling.characteristics.items():
-			self.logger.debug('root characteristic %s -> %s', k, v)
-			
+			try:
+				read_val = await self.bleak_client.read_gatt_char(k)
+				read_val = ':'.join(['%02x'%b for b in read_val]).upper()
+			except Exception as e:
+				read_val = 'cannot read: ' + str(e)
+			self.logger.debug('root characteristic %s -> %s = [%s]', k, v, read_val)
+
 		for k, v in profiling.services.items():
 			self.logger.debug('service %s -> %s', k, v.description)
 			for v2 in v.characteristics:
-				self.logger.debug('\tcharacteristic %s', v2)
+				try:
+					read_val = await self.bleak_client.read_gatt_char(v2.uuid)
+					read_val = ':'.join(['%02x'%b for b in read_val]).upper()
+				except Exception as e:
+					read_val = 'cannot read: ' + str(e)
+				self.logger.debug('\tcharacteristic %s = [%s]', v2, read_val)
 				for v3 in v2.descriptors:
 					self.logger.debug('\t\tdescriptor %s handle %d', v3, v3.handle)
-
+		for k, v in vars(Registers).items():
+			if not isinstance(v, Register):
+				continue
+			try:
+				read_val = await self.bleak_client.read_gatt_char(v.address)
+				read_val = ':'.join(['%02x'%b for b in read_val]).upper()
+			except Exception as e:
+				read_val = 'cannot read: ' + str(e)
 	
+			self.logger.debug('REGISTER %s -> %s = [%s]', v.address, v.name, read_val)
+
+
 	@synchronized(SYNC_LOCK)
 	async def disconnect(self):
 		'''
@@ -378,7 +398,9 @@ class AsyncClient(object):
 		'''
 		self.assert_connected()
 		
-		return await self.read(Registers.GENERIC_ACCESS_DEVICE_NAME)
+		# return await self.read(Registers.GENERIC_ACCESS_DEVICE_NAME)
+		# macOS compatibility patch
+		return await self.read(Registers.MODEL_NUMBER)
 
 
 	async def get_system_id(self):
@@ -746,7 +768,7 @@ class AsyncClient(object):
 		self.assert_connected()
 
 		self.logger.debug('sending ping to device')
-		await self.read(Registers.GENERIC_ACCESS_DEVICE_NAME, silent=True)
+		await self.read(Registers.MODEL_NUMBER, silent=True)
 		self.logger.debug('device responded to ping')
 	
 	

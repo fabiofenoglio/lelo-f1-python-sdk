@@ -1,3 +1,4 @@
+/.settings/
 /py36/
 /.vscode/
 .project
@@ -5,3 +6,4 @@
 __pycache__
 *.pyc
 /dist/
+/note.txt
