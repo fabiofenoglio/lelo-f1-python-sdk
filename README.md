@@ -9,9 +9,15 @@ The original and official repository with sample code for Android and iOS as wel
 
 This is an alternative Python (3.4+) wrapper. It supports all of the features listed in the BLE specifications (see following 'available methods').
 
+Since the bluetooth communication is based on the [bleak](https://pypi.org/project/bleak/) module, the following operative systems are supported:
+
+- Windows 10, version 16299 (Fall Creators Update) or greater
+- Linux distributions with BlueZ >= 5.43
+- OS X/macOS support via Core Bluetooth API, from at least OS X version 10.11
+
 ### Installation
 
-This package requires python 3.4.
+This package requires python 3.4+ and supports up to python 3.7.
 
 You can install from pip:
 ```sh
