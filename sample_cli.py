@@ -77,9 +77,13 @@ async def run():
 		# Register for notification on buttons press
 		await client.notify_buttons(cb_handler)
 
-		logging.info('waiting, try pressing the buttons')
+		logging.info('setting motors speed to 0/40')
+		await client.set_motors_speed([0, 40])
+
+		logging.info('waiting 30 seconds, try pressing the buttons')
 		await asyncio.sleep(30)
 
+		logging.info('finished, now disconnecting')
 
 	except Exception as e:
 		logging.exception('error in main routine: %s', e)
@@ -94,15 +98,15 @@ async def run():
 
 if __name__ == '__main__':
 	# Configure logging format
-	logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+	logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 	
 	# Configure logging for the library
-	logging.getLogger(f1client.Constants.LOGGER_NAME).setLevel(logging.INFO)
+	logging.getLogger(f1client.Constants.LOGGER_NAME).setLevel(logging.DEBUG)
 	logging.getLogger(f1client.Constants.LOGGER_CALLBACK_NAME).setLevel(logging.INFO)
-	logging.getLogger(f1client.Constants.LOGGER_IO_NAME).setLevel(logging.WARN)
+	logging.getLogger(f1client.Constants.LOGGER_IO_NAME).setLevel(logging.DEBUG)
 	
 	# Configure logging for the backend BLE adapter (bleak)
-	logging.getLogger('bleak').setLevel(logging.INFO)
+	logging.getLogger('bleak').setLevel(logging.DEBUG)
 
 	# Run the routine inside the main event loop
 	loop = asyncio.get_event_loop()
