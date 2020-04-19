@@ -352,8 +352,10 @@ class GUISample:
 		'''
 		self.log('clearing use count')
 		await self.get_client().reset_use_count()
+		
 		self.log('use count cleared')
-		await self.refresh_use_count()
+		self.snapshot['use_count'] = 0
+		self.update(self.FIELD_USE_LOG, '0')
 	
 	
 	async def get_main_motor_speed(self):

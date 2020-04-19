@@ -19,7 +19,7 @@ class Converters:
 	BOOLEAN_CONVERTER_TO = lambda local_value : [0x01 if local_value else 0x00]
 	NOT_SUPPORTED = lambda value: not_supported(value)
 	ASCII = lambda value: value.decode(Converters.ENCODING)
-	HEX_STRING = lambda bytes: ':'.join(['%02x'%b for b in bytes]).upper()
+	HEX_STRING = lambda bs: ':'.join(['%02x'%b for b in bs]).upper()
 	SINGLE_INTEGER = lambda value: value[0]
 	SINGLE_16B_INTEGER = lambda value: value[0]*256+value[1]
 	INTEGER_ARRAY = lambda value: [int(v) for v in value]
@@ -45,7 +45,7 @@ class Registers:
 	MOTOR_SPEED = Register(
 		'MOTOR SPEED', Characteristics.MOTOR_CONTROL, 
 		lambda device_value : tuple([device_value[1], device_value[2]]),
-		lambda local_value : bytes([0x01, local_value[0], local_value[1]]) )
+		lambda local_value : [0x01, local_value[0], local_value[1]] )
 
 	MOTOR_STOP = Register(
 		'MOTOR STOP', Characteristics.MOTOR_CONTROL, 

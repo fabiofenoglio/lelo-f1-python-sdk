@@ -308,7 +308,13 @@ class AsyncClient(object):
 
 		self.logger_io.info('WRITE %s %s << %s', register.address, register.name, converted_value)
 		
-		await self.bleak_client.write_gatt_char(register.address, bytearray(converted_value))
+		try:
+			await self.bleak_client.write_gatt_char(register.address, bytearray(converted_value))
+		except Exception as e:
+			self.logger_io.exception('error writing to %s: %s', register.address, e)
+			raise e
+
+		self.logger_io.info('WRITE %s %s DONE', register.address, register.name)
 
 
 	async def get_manufacturer_name(self):
