@@ -1,4 +1,4 @@
-![Upload Python Package](https://github.com/fabiofenoglio/lelo-f1-python-sdk/workflows/Upload%20Python%20Package/badge.svg)
+[![PyPI status](https://img.shields.io/pypi/status/lelof1py.svg)](https://pypi.python.org/pypi/lelof1py/) [![PyPI version fury.io](https://badge.fury.io/py/lelof1py.svg)](https://pypi.python.org/pypi/lelof1py/) [![PyPI pyversions](https://img.shields.io/pypi/pyversions/lelof1py.svg)](https://pypi.python.org/pypi/lelof1py/) ![Upload Python Package](https://github.com/fabiofenoglio/lelo-f1-python-sdk/workflows/Upload%20Python%20Package/badge.svg)
 
 
 # LELO F1 SDK Python client
