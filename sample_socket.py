@@ -4,7 +4,6 @@ import socket
 import json
 import PySimpleGUI as sg
 from collections.abc import Sequence
-import threading
 import time
 
 import lelof1py as f1client

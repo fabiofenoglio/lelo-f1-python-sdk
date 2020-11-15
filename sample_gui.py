@@ -1,6 +1,5 @@
 import asyncio
 import logging
-import threading
 import time
 import PySimpleGUI as sg
 from asyncio.futures import CancelledError
