@@ -106,7 +106,7 @@ if __name__ == '__main__':
 	logging.getLogger(f1client.Constants.LOGGER_IO_NAME).setLevel(logging.DEBUG)
 	
 	# Configure logging for the backend BLE adapter (bleak)
-	logging.getLogger('bleak').setLevel(logging.DEBUG)
+	logging.getLogger('bleak').setLevel(logging.INFO)
 
 	# Run the routine inside the main event loop
 	loop = asyncio.get_event_loop()

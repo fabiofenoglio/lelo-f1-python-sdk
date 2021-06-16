@@ -68,7 +68,7 @@ class AsyncClient(object):
 			else:
 				# filter by name	
 				for device in all_devices:
-					if device.name == Constants.ADVERTISING_DEVICE_NAME:
+					if device.name in Constants.ADVERTISING_DEVICE_NAMES:
 						self.logger.info('discovery found device with correct advertising name: %s, address=%s', device.name, device.address)
 						found.append(device)
 				self.logger.debug('of which %i with correct name', len(found))
@@ -157,10 +157,22 @@ class AsyncClient(object):
 				except Exception as e:
 					read_val = 'cannot read: ' + str(e)
 				self.logger.debug('\tcharacteristic %s = [%s]', v2, read_val)
+
+				# fill correct UUID in register fields
+				for _, candidate in vars(Registers).items():
+					if not isinstance(candidate, Register):
+						continue
+					if candidate.address_matcher.endswith('-') and candidate.address == candidate.address_matcher and v2.uuid.startswith(candidate.address_matcher):
+						print("found effective uuid", v2.uuid, "for matcher", candidate.address_matcher)
+						candidate.address = v2.uuid
+
 				for v3 in v2.descriptors:
 					self.logger.debug('\t\tdescriptor %s handle %d', v3, v3.handle)
+
 		for k, v in vars(Registers).items():
 			if not isinstance(v, Register):
+				continue
+			if v.address.endswith('-'):
 				continue
 			try:
 				read_val = await self.bleak_client.read_gatt_char(v.address)

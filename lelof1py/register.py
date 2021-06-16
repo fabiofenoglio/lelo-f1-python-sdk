@@ -16,6 +16,7 @@ class Register:
 
 	def __init__(self, name, address, translator_from, translator_to):
 		self.name = name
+		self.address_matcher = address
 		self.address = address
 		self.translator_from = translator_from
 		self.translator_to = translator_to
