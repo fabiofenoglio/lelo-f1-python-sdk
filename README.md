@@ -3,6 +3,8 @@
 
 # LELO F1 SDK Python client
 
+### WARNING: THIS PROJECT IS STILL NOT COMPATIBLE WITH THE NEWER VERSION OF THE DEVICE (F1S V2) AS BLE SPECIFICATIONS HAVE NOT YET BEEN RELEASED FROM THE PRODUCER.
+
 Python package to provide a BLE client to [LELO's F1 SDK](https://github.com/LELO-Devs/F1s-SDK).
 
 The original and official repository with sample code for Android and iOS as well as BLE specifications can be found at [https://github.com/LELO-Devs/F1s-SDK](https://github.com/LELO-Devs/F1s-SDK).
