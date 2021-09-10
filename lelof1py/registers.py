@@ -173,3 +173,6 @@ class Registers:
 		'PNP ID', Characteristics.DEVICE_INFORMATION_PNP_ID, 
 		Converters.HEX_STRING, Converters.NOT_SUPPORTED )
 	
+	SECURITY_ACCESS = Register(
+		'SECURITY_ACCESS', Characteristics.SECURITY_ACCESS,
+		Converters.INTEGER_TUPLE, Converters.INTEGER_TUPLE )

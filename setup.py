@@ -4,14 +4,14 @@ from distutils.core import setup
 setup(
 	name = 'lelof1py',
 	packages = ['lelof1py'],
-	version = '0.12-beta',
+	version = '0.13-beta',
 	license = 'MIT',
 	description = 'Python client for LELO F1 SDK device',
     long_description = 'See https://github.com/fabiofenoglio/lelo-f1-python-sdk',
 	author = 'Fabio Fenoglio',
 	author_email = 'development@fabiofenoglio.it',
 	url = 'https://github.com/fabiofenoglio/lelo-f1-python-sdk',
-	download_url = 'https://github.com/fabiofenoglio/lelo-f1-python-sdk/archive/v0.12-beta.tar.gz',
+	download_url = 'https://github.com/fabiofenoglio/lelo-f1-python-sdk/archive/v0.13-beta.tar.gz',
 	keywords = ['LELO', 'BLUETOOTH', 'REMOTE'],
 	install_requires = [
 		'asyncio',

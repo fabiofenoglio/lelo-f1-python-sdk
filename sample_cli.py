@@ -27,7 +27,7 @@ async def run():
 		return
 	
 	logging.info('Device found! Trying to connect ...')
-	await client.connect(devices[0].address, timeout=30)
+	await client.connect(devices[0].address, timeout=60)
 
 	logging.info('Device connected!')
 	
