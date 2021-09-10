@@ -678,7 +678,7 @@ class AsyncClient(object):
 	
 			else:
 				self.logger.debug('key state: got password, checking for security access write')
-				await self.write_security_access()
+				await self.write_security_access(value)
 				return False
 
 	@synchronized(SECURITY_ACCESS_SYNC_LOCK)
