@@ -213,8 +213,11 @@ class AsyncClient(object):
 	async def _disconnect(self):
 		self.logger.info('disconnecting from device')
 
-		if self.bleak_client:
-			await self.bleak_client.disconnect()
+		try:
+			if self.bleak_client:
+				await self.bleak_client.disconnect()
+		except Exception as e:
+			self.logger.warn('error disconnecting from device: ' + str(e))
 
 		self.connected = False
 		self.bleak_client = None

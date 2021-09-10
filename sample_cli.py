@@ -93,7 +93,8 @@ async def run():
 		if client.is_connected():
 			if await client.is_authorized():
 				await client.shutdown()
-			await client.disconnect()
+			else:
+				await client.disconnect()
 
 
 if __name__ == '__main__':
