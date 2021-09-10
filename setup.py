@@ -12,7 +12,7 @@ setup(
 	author_email = 'development@fabiofenoglio.it',
 	url = 'https://github.com/fabiofenoglio/lelo-f1-python-sdk',
 	download_url = 'https://github.com/fabiofenoglio/lelo-f1-python-sdk/archive/v0.13-beta.tar.gz',
-	keywords = ['LELO', 'BLUETOOTH', 'REMOTE'],
+	keywords = ['LELO', 'BLUETOOTH', 'REMOTE', 'F1S', 'F1SV2'],
 	install_requires = [
 		'asyncio',
 		'bleak',
