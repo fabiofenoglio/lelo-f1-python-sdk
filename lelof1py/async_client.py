@@ -11,6 +11,7 @@ from .helpers import *
 
 # Synchronization handle for concurrent resource access
 SYNC_LOCK = threading.Lock()
+SECURITY_ACCESS_SYNC_LOCK = threading.Lock()
 
 
 class AsyncClient(object):
@@ -33,7 +34,8 @@ class AsyncClient(object):
 	callback_data_history = dict()
 	
 	key_state_check = True
-
+	protocol = 1
+	wrote_security_access = False
 
 	def __init__(self):
 		'''
@@ -41,7 +43,6 @@ class AsyncClient(object):
 		'''
 		self.logger.debug('instantiating LELO F1 SDK client')
 		self.adapter = bleak
-
 
 	async def discover(self, timeout=1, address=None):
 		'''
@@ -120,6 +121,7 @@ class AsyncClient(object):
 		self.connected = True
 		self.bleak_client = client
 		self.connected_address = address
+		self.wrote_security_access = False
 		
 		# Profiles
 		self.logger.debug('profiling the device')
@@ -139,13 +141,20 @@ class AsyncClient(object):
 		'''
 		Enumerates characteristics on the device
 		'''
+		self.logger.debug('profiling the device now')
+
+		device_name = await self.get_model_number()
+		self.protocol = 2 if 'V2' in device_name.upper() else 1
+		self.logger.debug('discovering protocol from device name: %s => %s', device_name, str(self.protocol))
+
 		profiling = await self.bleak_client.get_services()
+
 		for k, v in profiling.characteristics.items():
 			try:
 				read_val = await self.bleak_client.read_gatt_char(k)
 				read_val = ':'.join(['%02x'%b for b in read_val]).upper()
 			except Exception as e:
-				read_val = 'cannot read: ' + str(e)
+				read_val = 'cannot read characteristic: ' + str(e)
 			self.logger.debug('root characteristic %s -> %s = [%s]', k, v, read_val)
 
 		for k, v in profiling.services.items():
@@ -155,16 +164,8 @@ class AsyncClient(object):
 					read_val = await self.bleak_client.read_gatt_char(v2.uuid)
 					read_val = ':'.join(['%02x'%b for b in read_val]).upper()
 				except Exception as e:
-					read_val = 'cannot read: ' + str(e)
+					read_val = 'cannot read service item: ' + str(e)
 				self.logger.debug('\tcharacteristic %s = [%s]', v2, read_val)
-
-				# fill correct UUID in register fields
-				for _, candidate in vars(Registers).items():
-					if not isinstance(candidate, Register):
-						continue
-					if candidate.address_matcher.endswith('-') and candidate.address == candidate.address_matcher and v2.uuid.startswith(candidate.address_matcher):
-						print("found effective uuid", v2.uuid, "for matcher", candidate.address_matcher)
-						candidate.address = v2.uuid
 
 				for v3 in v2.descriptors:
 					self.logger.debug('\t\tdescriptor %s handle %d', v3, v3.handle)
@@ -172,16 +173,13 @@ class AsyncClient(object):
 		for k, v in vars(Registers).items():
 			if not isinstance(v, Register):
 				continue
-			if v.address.endswith('-'):
-				continue
 			try:
 				read_val = await self.bleak_client.read_gatt_char(v.address)
 				read_val = ':'.join(['%02x'%b for b in read_val]).upper()
 			except Exception as e:
-				read_val = 'cannot read: ' + str(e)
+				read_val = 'cannot read register: ' + str(e)
 	
 			self.logger.debug('REGISTER %s -> %s = [%s]', v.address, v.name, read_val)
-
 
 	@synchronized(SYNC_LOCK)
 	async def disconnect(self):
@@ -196,7 +194,6 @@ class AsyncClient(object):
 		await self._shutdown_notifications()
 
 		await self._disconnect()
-	
 	
 	@synchronized(SYNC_LOCK)
 	async def shutdown(self):
@@ -213,7 +210,6 @@ class AsyncClient(object):
 		
 		await self._disconnect()
 
-
 	async def _disconnect(self):
 		self.logger.info('disconnecting from device')
 
@@ -225,7 +221,6 @@ class AsyncClient(object):
 		self.connected_address = None
 
 		self.logger.info('disconnected from device')
-
 
 	async def _shutdown_notifications(self):
 		'''
@@ -240,13 +235,11 @@ class AsyncClient(object):
 				except Exception as e2:
 					self.logger.exception('error closing callback handler for register %s: %s', register_key, e2)
 
-
 	def is_connected(self):
 		'''
 		Checks wether connection to the device is active
 		'''
 		return self.connected
-
 
 	def assert_connected(self):
 		'''
@@ -255,14 +248,12 @@ class AsyncClient(object):
 		if not self.connected:
 			raise ValueError('Client is not connected')
 		
-
 	async def is_authorized(self):
 		'''
 		Checks wether the user has authorized the connection by pressing the central button
 		'''
 		return self.is_connected() and await self.get_key_state(silent=True) 
 	
-
 	async def assert_authorized(self):
 		'''
 		Shortcut method to raise error if the connection has not been authorized by pressing the central button
@@ -273,20 +264,17 @@ class AsyncClient(object):
 		else:
 			self.logger.debug('skipping key_state check because it is disabled')
 
-
 	def enable_key_state_check(self):
 		'''
 		Enable check of KEY_STATE before attempting commands.
 		'''
 		self.key_state_check = True
 
-
 	def disable_key_state_check(self):
 		'''
 		Disable check of KEY_STATE before attempting commands.
 		'''
 		self.key_state_check = False
-
 
 	async def read(self, register, silent=False):
 		'''
@@ -666,7 +654,6 @@ class AsyncClient(object):
 		self.logger.info('setting cruise-control to %s', value)
 		return await self.write(Registers.MOTOR_WORK_ON_TOUCH, value)
 
-
 	async def get_key_state(self, silent=False):
 		'''
 		Reads the key state status.
@@ -675,8 +662,35 @@ class AsyncClient(object):
 		self.assert_connected()
 		if not silent:
 			self.logger.debug('checking key state')
-		return await self.read(Registers.KEY_STATE, silent=silent)
+		if self.protocol == 1:
+			return await self.read(Registers.KEY_STATE, silent=silent)
+		else:
+			value = await self.read(Registers.SECURITY_ACCESS, silent=silent)
+			
+			if value == (1, 0, 0, 0, 0, 0, 0, 0):
+				self.logger.debug('key state: 1, fully authorized')
+				return True
+			
+			elif value == (0, 0, 0, 0, 0, 0, 0, 0):
+				self.logger.debug('key state: 0, not authorized')
+				self.logger.info('Not authorized. Please, PRESS THE CENTRAL BUTTON')
+				return False
+	
+			else:
+				self.logger.debug('key state: got password, checking for security access write')
+				await self.write_security_access(value)
+				return False
 
+	@synchronized(SECURITY_ACCESS_SYNC_LOCK)
+	async def write_security_access(self, value):
+		if self.wrote_security_access:
+			return False
+
+		self.logger.debug('WRITING PASSWORD TO SECURITY ACCESS')
+		await self.write(Registers.SECURITY_ACCESS, value)
+		self.wrote_security_access = True
+		self.logger.debug('WROTE PASSWORD TO SECURITY ACCESS')
+		return True
 
 	async def stop_motors(self):
 		'''
